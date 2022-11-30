@@ -1,8 +1,12 @@
-name: run main.py
+name: run test.py
 
 on:
   schedule:
     - cron: '*/5 * * * *' # At 00:00 on Monday
+  workflow_dispatch:
+  
+env:
+  ACTIONS_ALLOW_USERNAME_COMMANDS = true
 
 jobs:
   build:
@@ -23,19 +27,5 @@ jobs:
           pip install -r requirements.txt
           
       - name: execute py script # run main.py
-        env:
-          SOME_SECRET: ${{ secrets.SOME_SECRET }}
-        run: python main.py
+        run: python test.py
           
-      - name: commit files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
-          
-      - name: push changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main 
